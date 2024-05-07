@@ -1,0 +1,78 @@
+html.dark {
+  .header_box {
+    background-color: #1d1e1f;
+    box-shadow: 3px 2px 4px #1c1b1c;
+  }
+  .layout {
+    background: linear-gradient(
+      90deg,
+      #413939 1%,
+      #483e48 10.2%,
+      #4b4552 19.6%,
+      #3a3a45 36.8%,
+      #364040 62.2%,
+      #3b4146 88.9%,
+      #4a4242 99%
+    ) !important;
+  }
+  .right-side .info-card .common-menu {
+    .label,
+    .value {
+      color: var(--font-color);
+    }
+  }
+  .right-side .info-card {
+    .git-ee2-text,
+    .git-ee2 .iconfont {
+      color: var(--font-color);
+    }
+  }
+  .el-popper.is-light {
+    border: none !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    background: linear-gradient(
+      90deg,
+      #413939 1%,
+      #483e48 10.2%,
+      #4b4552 19.6%,
+      #3a3a45 36.8%,
+      #364040 62.2%,
+      #3b4146 88.9%,
+      #4a4242 99%
+    ) !important;
+    z-index: 9999 !important;
+  }
+  .svg-icon {
+    color: #fff;
+  }
+  .article-info-inner {
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  /* 滚动条滑块 */
+  ::-webkit-scrollbar-thumb {
+    background-color: #57616f;
+    background-image: -webkit-linear-gradient( 45deg, rgb(84, 95, 95) 25%, transparent 25%, transparent 50%, rgb(78, 112, 112) 50%, rgb(90, 72, 83) 75%, transparent 75%, transparent);
+    border-radius: 2em;
+  }
+  ::scrollbar-thumb {
+    background-color: #69696b;
+    border-radius: 2em;
+  }
+  .gradient {
+    opacity: 1;
+    background: linear-gradient(120deg, #cccce6 80%, #767bd7 95%) !important;
+  }
+  .route-font {
+    background-image: linear-gradient(to right, #86aeb5, #ad8fba, #82a199, #96967b);
+  }
+  .common-menu__label , .common-menu__value{
+    color: #676767;
+  }
+  .page-name .toggle-theme .theme-card-dropdown{
+    color: #676767;
+    border: 3px solid #676767;
+  }
+  
+}
