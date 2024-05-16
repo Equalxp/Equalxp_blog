@@ -27,6 +27,7 @@ const goToArticleList = item => {
 </script>
 
 <template>
+  <PageHeader :loading="loading" />
   <div class="category center_box">
     <el-card class="category-card">
       <div class="category-total flex_center">

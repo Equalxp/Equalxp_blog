@@ -1,4 +1,5 @@
 <template>
+  <PageHeader />
   <div class="album">
     <el-row class="center_box">
       <el-col :span="24">
@@ -10,10 +11,7 @@
                   <span class="name">宇航员</span>
                   <span class="desc">收藏的一些壁纸</span>
                 </div>
-                <el-image
-                  class="album-box__image animate__animated animate__bounceIn"
-                  :src="item"
-                />
+                <el-image class="album-box__image animate__animated animate__bounceIn" :src="item" />
               </div>
             </el-col>
           </el-row>
@@ -24,10 +22,10 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import articleCover from '@/assets/img/astronaut.jpg'
-import articleCover1 from '@/assets/img/computer.jpg'
-import { useRouter } from 'vue-router'
+import { reactive } from "vue"
+import articleCover from "@/assets/img/astronaut.jpg"
+import articleCover1 from "@/assets/img/computer.jpg"
+import { useRouter } from "vue-router"
 
 const album = reactive([])
 for (let i = 0; i < 6; i++) {
@@ -36,7 +34,7 @@ for (let i = 0; i < 6; i++) {
 
 const router = useRouter()
 const details = () => {
-  router.push('/photos')
+  router.push("/photos")
 }
 </script>
 

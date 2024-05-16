@@ -1,23 +1,12 @@
 <template>
   <div class="pagination">
-    <el-pagination
-      background
-      :layout="layout"
-      :pager-count="pagerCount"
-      :page-sizes="pageSizes"
-      :page-size="size"
-      :total="total"
-      :currentPage="current"
-      @size-change="sizeChange"
-      @current-change="currentChange"
-      @prev-click="prev"
-      @next-click="next"
-    ></el-pagination>
+    <el-pagination background :layout="layout" :pager-count="pagerCount" :page-sizes="pageSizes" :page-size="size" :total="total" :currentPage="current" @size-change="sizeChange" @current-change="currentChange" @prev-click="prev" @next-click="next"></el-pagination>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { reactive } from "vue"
+
 const props = defineProps({
   total: {
     type: Number,
@@ -29,7 +18,7 @@ const props = defineProps({
   },
   layout: {
     type: String,
-    default: 'total,sizes, prev, pager, next, jumper, ->, slot', //分页组件会展示的功能项
+    default: "total,sizes, prev, pager, next, jumper, ->, slot", //分页组件会展示的功能项
   },
   pageSizes: {
     type: Array,
@@ -52,24 +41,24 @@ let page = reactive({
   current: props.current,
 })
 
-const emit = defineEmits(['pagination'])
+const emit = defineEmits(["pagination"])
 
 //选择每页显示数量 Change page size
-const sizeChange = (val) => {
+const sizeChange = val => {
   page.size = val
-  emit('pagination', page)
+  emit("pagination", page)
 }
 //选择某一页
-const currentChange = (val) => {
+const currentChange = val => {
   page.current = val
-  emit('pagination', page)
+  emit("pagination", page)
 }
 //上一页
-const prev = (val) => {
+const prev = val => {
   page.current = val - 1
 }
 //下一页
-const next = (val) => {
+const next = val => {
   page.current = val + 1
 }
 </script>

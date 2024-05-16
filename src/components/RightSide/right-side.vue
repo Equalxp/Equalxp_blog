@@ -1,55 +1,21 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue"
-import { homeGetConfig } from "@/api/config"
-import { getAllTag } from "@/api/tag"
-import { homeGetStatistic } from "@/api/home"
-import { randomFontColor } from "@/utils/tool"
-const loading = ref(true)
-const runtime = ref(0)
-let configDetail = reactive({})
-let tags = ref([])
-
-// 获取网站详细信息
-const getConfigDetail = async () => {
-  let res = await homeGetConfig()
-  if (res.code == 0) {
-    configDetail = res.result
-    calcRuntimeDays(configDetail.createdAt)
-  }
-}
-// 获取文章数、分类数、标签数
-const getStatistic = async () => {
-  let res = await homeGetStatistic()
-  if (res.code == 0) {
-    Object.assign(configDetail, res.result)
-  }
-}
-
-// 获取所有的标签
-const getAllTags = async () => {
-  let res = await getAllTag()
-  if (res.code == 0) {
-    tags.value = res.result.map(r => {
-      r.color = randomFontColor()
-      return r
-    })
-  }
-}
-// 计算出网站运行天数
-const calcRuntimeDays = time => {
-  if (time) {
-    const now = new Date().getTime()
-    const created = new Date(time).getTime()
-    const days = Math.floor((now - created) / 3.6e6)
-    runtime.value = days
-  }
-}
-onMounted(async () => {
-  loading.value = true
-  await getConfigDetail()
-  await getStatistic()
-  await getAllTags()
-  loading.value = false
+defineProps({
+  configDetail: {
+    type: Object,
+    default: () => {},
+  },
+  runtime: {
+    type: [String, Number],
+    default: "两年半",
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  tags: {
+    type: Array,
+    default: () => {},
+  },
 })
 </script>
 
@@ -90,7 +56,7 @@ onMounted(async () => {
             </template>
             <template #default>
               <RightSideItem icon="icon-speechbubble" title="碎碎念">
-                <div class="notice-text">我说话关你什么事</div>
+                <div class="notice-text">哔哔</div>
               </RightSideItem>
             </template>
           </el-skeleton>
@@ -114,22 +80,29 @@ onMounted(async () => {
       </el-col>
       <el-col :xs="0" :sm="24" class="right-side-space">
         <el-card class="right-card flex_c_center" shadow="hover">
-          <RightSideItem icon="icon-localoffer" title="网站资讯">
-            <div class="site-info">
-              <div class="flex_r_between">
-                <span>文章数目：</span>
-                <span class="value">1</span>
-              </div>
-              <div class="flex_r_between">
-                <span>运行时间：</span>
-                <span class="value">{{ runtime }} 天</span>
-              </div>
-              <div class="flex_r_between">
-                <span>博客访问次数：</span>
-                <span class="value">{{ configDetail.view_time }}</span>
-              </div>
-            </div>
-          </RightSideItem>
+          <el-skeleton :loading="loading" animated>
+            <template #template>
+              <RightSideSkeletonItem />
+            </template>
+            <template #default>
+              <RightSideItem icon="icon-localoffer" title="网站资讯">
+                <div class="site-info">
+                  <div class="flex_r_between">
+                    <span>文章数目：</span>
+                    <span class="value">{{ configDetail.articleCount }}</span>
+                  </div>
+                  <div class="flex_r_between">
+                    <span>运行时间：</span>
+                    <span class="value">{{ runtime }} 天</span>
+                  </div>
+                  <div class="flex_r_between">
+                    <span>博客访问次数：</span>
+                    <span class="value">{{ configDetail.view_time }}</span>
+                  </div>
+                </div>
+              </RightSideItem>
+            </template>
+          </el-skeleton>
         </el-card>
       </el-col>
     </el-row>

@@ -92,6 +92,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <PageHeader :article="articleInfo" :loading="loading" />
   <div class="article">
     <el-row class="article_box">
       <el-col :xs="24" :sm="18">

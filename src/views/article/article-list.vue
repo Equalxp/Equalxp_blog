@@ -7,6 +7,7 @@ const router = useRouter()
 const articleList = ref([])
 const currentType = ref(null)
 const currentName = ref(null)
+const loading = ref(false)
 let param = reactive({
   // 放置页码及相关数据
   current: 1, //当前页
@@ -27,6 +28,7 @@ const gotoDetail = id => {
 
 const getArticleListById = async () => {
   let res
+  loading.value = true
   if (currentType.value == "tag") {
     res = await getArticleListByTagId(param)
   } else {
@@ -35,6 +37,7 @@ const getArticleListById = async () => {
   if (res.code == 0) {
     articleList.value = res.result.list
     total.value = res.result.total
+    loading.value = false
   }
 }
 
@@ -48,25 +51,43 @@ onMounted(() => {
 </script>
 
 <template>
+  <PageHeader :loading="loading" />
   <div class="center_box">
     <el-card class="article-list">
-      <div class="article-list__head flex_r_between">
-        <div class="article-list__head-type">{{ currentType == "tag" ? "标签 - " + currentName : "分类 - " + currentName }}</div>
-        <div class="article-list__head-total">文章总数：{{ total }}</div>
-      </div>
-      <el-row>
-        <el-col :xs="12" :sm="8" :md="6" v-for="(item, index) in articleList" :key="index">
-          <el-card class="gradient" @click="gotoDetail(item.id)">
-            <div class="article-img-box scale">
-              <el-image class="article-img scale animate__animated animate__fadeInDown" :src="item.article_cover"></el-image>
+      <el-skeleton v-if="loading" :loading="loading" animated>
+        <template #template>
+          <div class="flex_r_between">
+            <SkeletonItem variant="text" width="10rem" height="4rem" />
+            <SkeletonItem variant="text" width="8rem" height="2rem" />
+          </div>
+          <div class="flex_r_between skeleton-item">
+            <div v-for="i in 4">
+              <SkeletonItem variant="image" width="15rem" height="6rem" />
+              <SkeletonItem variant="text" width="12rem" top="1rem" height="20px" />
+              <SkeletonItem variant="text" width="14rem" top="1.5rem" height="15px" />
             </div>
-            <div class="article-title">
-              <Tooltip :name="item.article_title" size="1.2rem" color="#b3b7ff" />
-              <Tooltip :name="item.createdAt" size="1rem" color="#b3b7ff" />
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+          </div>
+        </template>
+      </el-skeleton>
+      <template v-else>
+        <div class="article-list__head flex_r_between">
+          <div class="article-list__head-type">{{ currentType == "tag" ? "标签 - " + currentName : "分类 - " + currentName }}</div>
+          <div class="article-list__head-total">文章总数：{{ total }}</div>
+        </div>
+        <el-row>
+          <el-col :xs="12" :sm="8" :md="6" v-for="(item, index) in articleList" :key="index">
+            <el-card class="gradient" @click="gotoDetail(item.id)">
+              <div class="article-img-box scale">
+                <el-image class="article-img scale animate__animated animate__fadeInDown" :src="item.article_cover"></el-image>
+              </div>
+              <div class="article-title">
+                <Tooltip :name="item.article_title" size="1.2rem" color="#b3b7ff" />
+                <Tooltip :name="item.createdAt" size="1rem" color="#b3b7ff" />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </template>
     </el-card>
     <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="total" @pagination="pagination" />
   </div>
@@ -110,7 +131,9 @@ onMounted(() => {
     }
   }
 }
-
+.skeleton-item {
+  margin-top: 1rem;
+}
 @media screen and (min-width: 768px) {
   .article-img {
     height: 8rem;

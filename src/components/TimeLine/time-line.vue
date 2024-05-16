@@ -1,56 +1,74 @@
-<template>
-  <el-timeline class="my-timeline">
-    <div v-for="(item, index) in archives" :key="index">
-      <div class="year to_pointer">{{ item.year }}</div>
-      <el-timeline-item v-for="article in item.articleList" size="large" :hollow="true" hide-timestamp :center="true" class="my-timeline-item border-orange">
-        <div class="flex_r_start timeline">
-          <el-image class="timeline-cover scale" :src="article.article_cover"></el-image>
-          <div class="timeline-info">
-            <div class="timeline-info__title">
-              {{ article.article_title }}
-            </div>
-            <div class="timeline-info__time">
-              {{ article.createdAt }}
-            </div>
-          </div>
-        </div>
-      </el-timeline-item>
-    </div>
-  </el-timeline>
-  <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="archivesTotal" @pagination="pagination" />
-</template>
-
 <script setup>
-import { ref, reactive, onMounted } from "vue"
-import { blogTimelineGetArticleList } from "@/api/article"
-const archives = ref([])
-let param = reactive({
-  // 放置页码及相关数据
-  current: 1, //当前页
-  size: 10, //每页条目数
-})
-let archivesTotal = ref(0) // 记录总数
+import { useRouter } from "vue-router"
+const emit = defineEmits(["pagination"])
+
 let layout = " prev, pager, next" //分页组件会展示的功能项
 
-const pagination = page => {
-  param.current = page.current
-  getArchives()
-}
-
-// 获取时间轴
-const getArchives = async () => {
-  let res = await blogTimelineGetArticleList(param.current, param.size)
-  if (res.code == 0) {
-    const { total, list } = res.result
-    archives.value = list
-    archivesTotal.value = total
-  }
-}
-
-onMounted(() => {
-  getArchives()
+defineProps({
+  archives: {
+    type: Object,
+    default: () => {},
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  param: {
+    type: Object,
+    default: () => {},
+  },
+  total: {
+    type: Number,
+    default: 0,
+  },
 })
+
+const pagination = page => {
+  emit("pagination", page)
+}
+
+const router = useRouter()
+
+const goToArticle = article => {
+  router.push({ path: "/article", query: { id: article.id } })
+}
 </script>
+<template>
+  <el-timeline class="my-timeline">
+    <el-skeleton v-if="loading" :loading="loading" animated class="skeleton">
+      <template #template>
+        <SkeletonItem variant="text" width="4rem" height="2rem" />
+        <SkeletonItem class="skeleton-left" variant="text" width="0.5rem" height="60rem" />
+        <div class="flex_r_start skeleton-right" v-for="i in 10">
+          <SkeletonItem variant="image" width="8rem" height="8rem" />
+          <div class="flex_c_center skeleton-right__item">
+            <SkeletonItem variant="text" width="4rem" height="25px" />
+            <SkeletonItem variant="text" width="6rem" top="1rem" height="15px" />
+          </div>
+        </div>
+      </template>
+    </el-skeleton>
+    <template v-else>
+      <div v-for="(item, index) in archives" :key="index">
+        <div class="year to_pointer">{{ item.year }}</div>
+        <el-timeline-item v-for="article in item.articleList" size="large" :hollow="true" hide-timestamp :center="true" class="my-timeline-item border-orange">
+          <div class="flex_r_start timeline">
+            <el-image class="timeline-cover scale" :src="article.article_cover" @click="goToArticle(article)"></el-image>
+            <div class="timeline-info" @click="goToArticle(article)">
+              <div class="timeline-info__title">
+                {{ article.article_title }}
+              </div>
+              <div class="timeline-info__time">
+                {{ article.createdAt }}
+              </div>
+            </div>
+          </div>
+        </el-timeline-item>
+      </div>
+    </template>
+  </el-timeline>
+  <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="total" @pagination="pagination" />
+</template>
 
 <style lang="scss" scoped>
 .year {
@@ -142,6 +160,22 @@ onMounted(() => {
       display: flex;
       align-items: center;
       margin-left: 1rem;
+    }
+  }
+}
+.skeleton {
+  position: relative;
+  &-left {
+    position: absolute;
+    left: 0;
+    top: 4rem;
+  }
+  &-right {
+    margin-left: 30px;
+    margin-top: 20px;
+    &__item {
+      width: 100px;
+      height: 100px;
     }
   }
 }

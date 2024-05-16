@@ -43,6 +43,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <PageHeader :loading="loading" />
   <div class="tag">
     <el-row class="center_box">
       <el-col :span="24">
