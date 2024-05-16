@@ -39,8 +39,7 @@
                   </span>
                   <span class="to_pointer" @click="operate('tag', item)">
                     <i class="iconfont icon-label_fill"></i>
-                    <span class="meta-value" v-for="(tagName, index) in item.tagNameList" :key="index"> {{ index ==
-                    item.tagNameList.length - 1 ? tagName : tagName + '、' }} </span>
+                    <span class="meta-value" v-for="(tagName, index) in item.tagNameList" :key="index"> {{ index == item.tagNameList.length - 1 ? tagName : tagName + "、" }} </span>
                     <span class="article-meta__separator">|</span>
                   </span>
                   <span class="to_pointer">
@@ -61,49 +60,47 @@
         <!-- 图片 -->
       </el-card>
     </el-col>
-    <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="articleTotal"
-      @pagination="pagination" />
+    <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="articleTotal" @pagination="pagination" />
   </el-row>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { homeGetArticleList } from '@/api/article'
+import { onMounted, reactive, ref } from "vue"
+import { useRouter } from "vue-router"
+import { homeGetArticleList } from "@/api/article"
 
-const router = useRouter();
+const router = useRouter()
 
 const param = reactive({
   current: 1, // 当前页
   size: 10, // 每页条目数
-  loading: true, // 加载
-});
-let articleList = reactive([]);
+  loading: true // 加载
+})
+let articleList = reactive([])
 
 /* 文章操作 start */
 const operate = (type, item, index) => {
   switch (type) {
     case "detail":
-      router.push({ path: "/article" });
-      break;
+      router.push({ path: "/article", query: { id: item.id } })
+      break
     case "tag":
-      router.push({ path: "/tag" });
-      break;
+      router.push({ path: "/tag" })
+      break
     case "category":
-      router.push({ path: "/category" });
-      break;
+      router.push({ path: "/category" })
+      break
   }
-};
+}
 /* 文章操作 end */
 
+let articleTotal = ref(20) // 记录总数
+let layout = " prev, pager, next" //分页组件会展示的功能项
 
-let articleTotal = ref(20); // 记录总数
-let layout = " prev, pager, next"; //分页组件会展示的功能项
-
-const pagination = (page) => {
-  param.current = page.current;
+const pagination = page => {
+  param.current = page.current
   getHomeArticleList()
-};
+}
 
 const getHomeArticleList = async () => {
   param.loading = true
@@ -119,10 +116,7 @@ const getHomeArticleList = async () => {
 
 onMounted(async () => {
   await getHomeArticleList()
-});
-
-
-
+})
 </script>
 
 <style lang="scss" scoped>

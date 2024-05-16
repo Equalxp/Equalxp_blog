@@ -27,7 +27,7 @@
           </el-skeleton>
         </el-card>
       </el-col>
-      <el-col :xs="0" :sm="24" class="right-side-space">
+      <!-- <el-col :xs="0" :sm="24" class="right-side-space">
         <el-card class="right-card flex_c_center" shadow="hover">
           <el-skeleton :loading="loading" animated>
             <template #template>
@@ -40,7 +40,7 @@
             </template>
           </el-skeleton>
         </el-card>
-      </el-col>
+      </el-col> -->
       <el-col :xs="0" :sm="24" class="right-side-space">
         <el-card class="right-card flex_c_center" shadow="hover">
           <el-skeleton :loading="loading" animated>
@@ -50,10 +50,7 @@
             <template #default>
               <RightSideItem icon="icon-localoffer" title="标签">
                 <div class="notice-text">
-                  <span class="notice-text__item" v-for="(tag, index) in tags" :key="index"
-                    :style="{ color: tag.color }">{{ index+ 1 == tags.length ?
-                    tag.tag_name :
-                    tag.tag_name + '&nbsp;&nbsp;' }}</span>
+                  <span class="notice-text__item" v-for="(tag, index) in tags" :key="index" :style="{ color: tag.color }">{{ index + 1 == tags.length ? tag.tag_name : tag.tag_name + "&nbsp;&nbsp;" }}</span>
                 </div>
               </RightSideItem>
             </template>
@@ -85,11 +82,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
-import { homeGetConfig } from '@/api/config'
-import { getAllTag } from '@/api/tag'
-import { randomFontColor } from '@/utils/tool'
-const loading = ref(true);
+import { ref, onMounted, reactive } from "vue"
+import { homeGetConfig } from "@/api/config"
+import { getAllTag } from "@/api/tag"
+import { randomFontColor } from "@/utils/tool"
+const loading = ref(true)
 const runtime = ref(0)
 let configDetail = reactive({})
 let tags = ref([])
@@ -117,7 +114,7 @@ const getAllTags = async () => {
   }
 }
 // 计算出网站运行天数
-const calcRuntimeDays = (time) => {
+const calcRuntimeDays = time => {
   if (time) {
     const now = new Date().getTime()
     const created = new Date(time).getTime()
@@ -128,7 +125,7 @@ const calcRuntimeDays = (time) => {
 onMounted(async () => {
   await getConfigDetail()
   await getAllTags()
-});
+})
 </script>
 
 <style lang="scss" scoped>
