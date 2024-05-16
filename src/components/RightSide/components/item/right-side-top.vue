@@ -28,16 +28,27 @@
   <div class="personal-link flex_r_around">
     <i class="iconfont icon-bilibili-line to_pointer" @click="operate('openLink', configDetail.bilibili_link)"></i>
     <i class="iconfont icon-github-fill to_pointer" @click="operate('openLink', configDetail.github_link)"></i>
-    <i class="iconfont icon-weixin1 to_pointer" @click="operate('openLink', configDetail.we_chat_link)"></i>
-    <i class="iconfont icon-QQ1 to_pointer" @click="operate('openLink', configDetail.qq_link)"></i>
+
+    <el-popover placement="top" trigger="hover">
+      <el-image style="width: 100%; height: 100%" :src="configDetail.we_chat_link"></el-image>
+      <template #reference>
+        <i class="iconfont icon-weixin1 to_pointer" @click="operate('openLink', configDetail.we_chat_link)"></i>
+      </template>
+    </el-popover>
+    <el-popover placement="top" trigger="hover">
+      <el-image style="width: 100%; height: 100%" :src="configDetail.qq_link"></el-image>
+      <template #reference>
+        <i class="iconfont icon-QQ1 to_pointer" @click="operate('openLink', configDetail.qq_link)"></i>
+      </template>
+    </el-popover>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import blogAvatar from '@/assets/img/blogAvatar.png'
-import computer from '@/assets/img/computer.jpg'
+import { ref } from "vue"
+import { useRouter } from "vue-router"
+import blogAvatar from "@/assets/img/blogAvatar.png"
+import computer from "@/assets/img/computer.jpg"
 
 const router = useRouter()
 const avatar = ref(blogAvatar) // 博客头像
@@ -46,23 +57,23 @@ const infoBackground = ref(computer) // 博客头像背景
 const props = defineProps({
   configDetail: {
     type: Object,
-    default: () => { },
+    default: () => {},
   },
 })
 
 /* operate start */
 const operate = (op, val) => {
   switch (op) {
-    case 'goToCategory':
-      router.push('/category')
+    case "goToCategory":
+      router.push("/category")
       break
-    case 'goToTag':
-      router.push('/tag')
+    case "goToTag":
+      router.push("/tag")
       break
-    case 'goToArchives':
-      router.push('/archives')
+    case "goToArchives":
+      router.push("/archives")
       break
-    case 'openLink':
+    case "openLink":
       window.open(val)
       break
   }
@@ -161,7 +172,7 @@ const operate = (op, val) => {
     left: 0;
     z-index: -1;
     background: var(--primary);
-    content: '';
+    content: "";
     transition: transform 0.5s ease-out;
     transform: scaleX(0);
     transform-origin: 0 50%;

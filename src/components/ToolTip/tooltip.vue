@@ -1,6 +1,6 @@
 <template>
   <el-tooltip :content="name" placement="top" effect="light" :disabled="tooltipDisabled">
-    <span class="tooltip-text-overflow animate__animated animate__fadeIn" :style="`width: ${width};font-size:${size};color: ${color};font-weight: ${weight};text-align: ${align}`" :data-name="name" @mouseenter="onMouseEnter">{{ name }} </span>
+    <span class="tooltip-text-overflow animate__animated animate__fadeIn" :style="`width: ${width};font-size:${size};color: ${color};font-weight: ${weight};text-align: ${align};line-height: ${lineHeight}`" :data-name="name" @mouseenter="onMouseEnter">{{ name }} </span>
   </el-tooltip>
 </template>
 
@@ -31,6 +31,10 @@ const props = defineProps({
   align: {
     type: String,
     default: "left",
+  },
+  lineHeight: {
+    type: Number,
+    default: 1,
   },
 })
 

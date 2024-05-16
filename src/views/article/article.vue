@@ -7,6 +7,7 @@ import MdEditor from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import { getArticleById, getRecommendArticleById } from "@/api/article"
 import { useRouter } from "vue-router"
+import { ElMessage } from "element-plus"
 
 const MdCatalog = MdEditor.MdCatalog
 const router = useRouter()
@@ -18,7 +19,6 @@ const { codeTheme, previewTheme, mainTheme } = storeToRefs(staticStore)
 const mdState = reactive({
   text: "",
   id: "my-editor",
-  catalogue: [],
   switch: true,
 })
 const loading = ref(false)
@@ -31,11 +31,6 @@ const recommendList = ref([])
 const previousArticle = ref({})
 const nextArticle = ref({})
 
-// 获取md文档目录
-const onGetCatalog = list => {
-  mdState.catalogue = list
-}
-
 const toggleDrawer = () => {
   drawerShow.value = !drawerShow.value
 }
@@ -46,7 +41,7 @@ const goToArticle = article => {
 
 // 文章点赞
 const thumbsUp = () => {
-  console.log("点赞")
+  ElMessage.info("点赞功能未开放")
 }
 // 文章详情
 const getArticleDetails = async id => {
@@ -98,7 +93,7 @@ onMounted(async () => {
       <el-col :xs="24" :sm="18">
         <el-skeleton v-if="loading" :loading="loading" :rows="8" animated />
         <el-card v-else class="md-preview">
-          <MdEditor class="md-preview-v3" v-model="mdState.text" :editorId="mdState.id" :previewOnly="true" :preview-theme="previewTheme" :code-theme="codeTheme" :theme="mainTheme ? 'dark' : 'light'" @on-get-catalog="onGetCatalog"></MdEditor>
+          <MdEditor class="md-preview-v3" v-model="mdState.text" :editorId="mdState.id" :previewOnly="true" :preview-theme="previewTheme" :code-theme="codeTheme" :theme="mainTheme ? 'dark' : 'light'"></MdEditor>
           <div class="article-info">
             <div class="article-info-inner">
               <div>
@@ -187,7 +182,7 @@ onMounted(async () => {
     </div>
     <!-- 移动端目录 -->
     <el-drawer title="目录" v-model="drawerShow" direction="ltr" :before-close="toggleDrawer" :append-to-body="true" size="60%" :z-index="9999">
-      <MdCatalog :editorId="mdState.id" :scroll-element="scrollElement" />
+      <MdCatalog v-if="!loading" :editorId="mdState.id" :scroll-element="scrollElement" />
     </el-drawer>
   </div>
 </template>

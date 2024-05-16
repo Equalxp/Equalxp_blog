@@ -72,9 +72,9 @@ const pagination = page => {
             </div>
             <!-- 信息 -->
             <div class="article-info flex_c_between animate__animated animate__fadeIn">
-              <div class="title" @click="operate('detail', item)">
+              <span class="title text_overflow" :title="item.article_title" @click="operate('detail', item)">
                 {{ item.article_title }}
-              </div>
+              </span>
               <div class="meta">
                 <span class="to_pointer">
                   <i class="iconfont icon-calendar2"></i>
@@ -107,7 +107,7 @@ const pagination = page => {
                   <span class="meta-value">{{ item.view_times }}</span>
                 </span>
               </div>
-              <div class="desc flex_c_between">{{ item.article_description }}</div>
+              <tooltip width="100%" size="1.2rem" align="left" :lineHeight="3" :name="item.article_description" />
             </div>
           </div>
           <!-- 图片 -->
@@ -129,6 +129,8 @@ const pagination = page => {
 
 .article-info {
   .title {
+    display: inline-block;
+    width: 100%;
     font-size: 1.8rem;
     color: #676767;
     font-weight: 600;
@@ -183,13 +185,6 @@ const pagination = page => {
     i {
       margin: 0 0.2rem 0 0;
     }
-  }
-
-  .desc {
-    font-size: 120%;
-    color: #676767;
-    font-weight: 500;
-    line-height: 3;
   }
 }
 

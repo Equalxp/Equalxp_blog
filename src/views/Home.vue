@@ -96,6 +96,16 @@ onMounted(async () => {
   <div class="home_center_box">
     <el-row>
       <el-col :xs="24" :sm="18">
+        <el-card class="mobile-top-card info-card animate__animated animate__fadeIn" shadow="hover">
+          <el-skeleton :loading="rightSizeLoading" animated>
+            <template #template>
+              <RightSideTopSkeleton />
+            </template>
+            <template #default>
+              <RightSideTop :configDetail="configDetail" />
+            </template>
+          </el-skeleton>
+        </el-card>
         <!-- 博客文章 -->
         <HomeArticleList :articleList="articleList" :param="param" :articleTotal="articleTotal" @pageChange="pagination"></HomeArticleList>
       </el-col>
@@ -107,4 +117,9 @@ onMounted(async () => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mobile-top-card {
+  height: 28rem;
+  margin: 4px;
+}
+</style>

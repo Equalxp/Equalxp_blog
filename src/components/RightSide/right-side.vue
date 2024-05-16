@@ -48,20 +48,6 @@ defineProps({
           </el-skeleton>
         </el-card>
       </el-col>
-      <!-- <el-col :xs="0" :sm="24" class="right-side-space">
-        <el-card class="right-card flex_c_center" shadow="hover">
-          <el-skeleton :loading="loading" animated>
-            <template #template>
-              <RightSideSkeletonItem />
-            </template>
-            <template #default>
-              <RightSideItem icon="icon-speechbubble" title="碎碎念">
-                <div class="notice-text">哔哔</div>
-              </RightSideItem>
-            </template>
-          </el-skeleton>
-        </el-card>
-      </el-col> -->
       <el-col :xs="0" :sm="24" class="right-side-space">
         <el-card class="right-card flex_c_center animate__animated animate__fadeIn" shadow="hover">
           <el-skeleton :loading="loading" animated>

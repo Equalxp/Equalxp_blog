@@ -8,7 +8,7 @@ const route = useRoute()
 const photoList = ref([])
 const previewList = ref([])
 const loading = ref(false)
-const observe = null
+let observe = null
 
 // 根据id获取相册图片
 const pageGetPhotos = async id => {
@@ -21,7 +21,6 @@ const pageGetPhotos = async id => {
     nextTick(() => {
       observePhotoBox() // 监听盒子
     })
-    total.value = res.result.total
   }
 }
 
@@ -31,7 +30,7 @@ const observePhotoBox = () => {
   observe = new IntersectionObserver(
     entries => {
       entries.forEach(async e => {
-        if (entries.intersectionRatio > 0) {
+        if (e.intersectionRatio > 0) {
           // 获取数据
           const src = e.target.getAttribute("data-src")
           // 绑定数据
@@ -97,7 +96,8 @@ onBeforeUnmount(() => {
     vertical-align: middle;
     cursor: pointer;
     width: 10rem;
-    height: 10rem;
+    height: 7rem;
+    object-fit: cover;
   }
 }
 .row-space {

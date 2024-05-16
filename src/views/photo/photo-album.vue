@@ -105,6 +105,7 @@ onBeforeUnmount(() => {
       vertical-align: middle;
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
     &__mask {
       display: block;

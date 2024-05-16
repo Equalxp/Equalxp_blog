@@ -15,6 +15,14 @@ html.dark {
   .layout {
     background: linear-gradient(90deg, #413939 1%, #483e48 10.2%, #4b4552 19.6%, #3a3a45 36.8%, #364040 62.2%, #3b4146 88.9%, #4a4242 99%) !important;
   }
+  .info-avatar {
+    .blog-name {
+      color: var(--dark-font-color);
+    }
+  }
+  .personal-say{
+    color: var(--dark-font-color);
+  }
   .right-side .info-card {
     .common-menu {
       .label,
@@ -28,14 +36,8 @@ html.dark {
         color: var(--dark-font-color);
       }
     }
-    .info-avatar {
-      .blog-name {
-        color: var(--dark-font-color);
-      }
-    }
-    .personal-say{
-      color: var(--dark-font-color);
-    }
+    
+    
     .git-ee__item-text {
         color: var(--dark-font-color);
     }

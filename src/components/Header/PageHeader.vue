@@ -19,7 +19,7 @@ const props = defineProps({
   },
   bgUrl: {
     type: String,
-    default: "https://mrzym.gitee.io/blogimg/cover/11.26.jpg",
+    default: "https://mrzym.gitee.io/blogimg/cover/cute.jpg",
   },
 })
 
@@ -28,9 +28,9 @@ const toggleMdTheme = (type, theme) => {
 }
 
 const getBgCover = computed(() => {
-  let url = "https://mrzym.gitee.io/blogimg/cover/11.26.jpg"
+  let url = "https://mrzym.gitee.io/blogimg/cover/cute.jpg"
   if (route.path == "/article") {
-    url = props.article.article_cover || "https://mrzym.gitee.io/blogimg/cover/11.26.jpg"
+    url = props.article.article_cover || "https://mrzym.gitee.io/blogimg/cover/cute.jpg"
   }
   return `background-image: url(${url});}`
 })

@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue"
 import { Search } from "@element-plus/icons-vue"
-
 import { getHotArticle, getArticleByContent } from "@/api/article"
 import { _setLocalItem, _getLocalItem, _removeLocalItem } from "@/utils/tool"
 import { useRouter } from "vue-router"
 
+const router = useRouter()
 const isClick = ref(false)
 const searchShow = ref(false)
 const input = ref("") // 搜索内容
@@ -18,9 +18,7 @@ const clickSearchIcon = async () => {
   // 打开搜索框
   isClick.value = true
   searchShow.value = true
-
   historySearchList.value = _getLocalItem("blogSearchHistory") || []
-
   // 获取热门文章
   let res = await getHotArticle()
   if (res.code == 0) {
@@ -28,7 +26,7 @@ const clickSearchIcon = async () => {
       return {
         id: r.id,
         article_title: r.article_title,
-        icon: numberList[index]
+        icon: numberList[index],
       }
     })
   }
@@ -68,7 +66,7 @@ const getArticleList = async () => {
           id: r.id,
           article_title: r.article_title,
           highlight_content: input.value,
-          rest_content: r.article_content.substring(input.value.length)
+          rest_content: r.article_content.substring(input.value.length),
         }
       })
     if (historySearchList.value.length > 10) {
@@ -99,28 +97,40 @@ const goToArticle = id => {
       <el-dialog v-model="searchShow" title="搜索" class="my-search-dialog" :before-close="handleClose" :close-on-click-modal="false" :lock-scroll="false" :append-to-body="true">
         <el-input v-model="input" class="search-input" placeholder="请输入搜索内容" :prefix-icon="Search" clearable @clear="searchInfo" @change="searchInfo" />
         <div class="search-main__box">
-          <div v-if="result.length">
-            <div v-for="(article, index) in result" :key="index">
-              <span>{{ article.article_title }}</span>
-              <span>{{ article.article_content }}</span>
-            </div>
-          </div>
-          <div v-else class="empty">
+          <div class="empty">
             <div class="hot-box">
               <div class="hot-box__search">
                 <div class="history">
-                  搜索历史
-                  <div class="hot-box__tag">
-                    <el-tag style="margin: 0.3rem" v-for="history in historySearchList" type="info" :closable="true">{{ history }}</el-tag>
+                  <div v-if="searchResult.length">
+                    <div v-for="(article, index) in searchResult" :key="index" @click="goToArticle(article.id)">
+                      <div class="text-overflow title">{{ article.article_title }}</div>
+                      <span class="text-overflow content highlight">{{ article.highlight_content }}</span>
+                      <span class="text-overflow content">{{ article.rest_content }}</span>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div class="flex_r_between">
+                      <span>搜索历史</span>
+                      <span v-if="historySearchList.length" class="clear-history" @click="clearHistorySearch">
+                        清空搜索历史
+                        <i class="iconfont icon-off-search"></i>
+                      </span>
+                    </div>
+                    <span class="history-search" v-for="history in historySearchList">
+                      <el-tag class="history-search-tag" @click="clickHistoryTag(history)">{{ history }}</el-tag>
+                    </span>
                   </div>
                 </div>
                 <div class="hot-search">
                   <div class="flex_r_between">
-                    热门搜索
+                    热门推荐
                     <i class="iconfont icon-hot"></i>
                   </div>
-                  <div class="hot-box__tag">
-                    <el-tag style="margin: 0.3rem" v-for="(hot, index) in hotSearchList" :type="index < 3 ? 'danger' : 'info'" :closable="true">{{ hot }}</el-tag>
+                  <div class="hot-box__recommend" style="margin: 0.3rem" v-for="(hot, index) in hotSearchList">
+                    <span :title="hot.article_title" class="title" @click="goToArticle(hot.id)">
+                      <span v-html="hot.icon" class="number-icon"></span>
+                      {{ hot.article_title }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -181,16 +191,60 @@ const goToArticle = id => {
     align-items: flex-start;
   }
   .icon-hot {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     color: var(--hot-color);
   }
   .history {
     width: 50%;
     height: 100%;
+    padding: 0 0.5rem;
+    overflow: auto;
+    .clear-history,
+    .icon-off-search {
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    &-search {
+      padding: 0.3rem 0;
+      &-tag {
+        margin: 0.3rem;
+      }
+    }
+    .title {
+      font-size: 1rem;
+      color: var(--font-color);
+    }
+    .content {
+      font-size: 0.8rem;
+      color: var(--font-color);
+    }
+    .highlight {
+      background: #c6e0ff;
+      display: inline-block;
+      margin: 0 0.3rem;
+    }
   }
   .hot-search {
     width: 50%;
     height: 100%;
+    padding: 0 0.5rem;
+    overflow: hidden;
+  }
+  &__recommend {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    .title {
+      position: absolute;
+      padding-left: 1rem;
+      display: inline-block;
+    }
+    .number-icon {
+      position: absolute;
+      top: -2px;
+      left: -0.4rem;
+      color: var(--hot-color);
+    }
   }
 }
 </style>
