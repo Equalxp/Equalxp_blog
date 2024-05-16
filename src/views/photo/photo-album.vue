@@ -1,17 +1,51 @@
+<script setup>
+import { ref, reactive, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import { getAlbumList } from "@/api/photo"
+
+const param = reactive({
+  current: 1,
+  size: 8
+})
+const albumList = ref([])
+const total = ref(0)
+
+const router = useRouter()
+const goToPhotos = id => {
+  router.push({ path: "/photos", query: { id } })
+}
+
+const pageGetAlbumList = async () => {
+  let res = await getAlbumList(param)
+  if (res.code == 0) {
+    if (param.current == 1) {
+      albumList.value = res.result.list
+    } else {
+      albumList.value = albumList.value.concat(res.result.list)
+    }
+    total.value = res.result.total
+  }
+}
+
+onMounted(() => {
+  pageGetAlbumList()
+})
+</script>
+
 <template>
   <PageHeader />
-  <div class="album">
+  <div class="albumList">
     <el-row class="center_box">
       <el-col :span="24">
-        <el-card class="album-card">
+        <el-card class="albumList-card">
           <el-row class="row-space">
-            <el-col class="col-space" :xs="24" :sm="12" v-for="item in album" :key="item">
-              <div class="album-box" @click="details">
-                <div class="album-box__mask">
-                  <span class="name">宇航员</span>
-                  <span class="desc">收藏的一些壁纸</span>
+            <el-col class="col-space" :xs="12" :sm="6" v-for="item in albumList" :key="item.id">
+              <div class="albumList-box flex_center" @click="goToPhotos(item.id)">
+                <div class="albumList-box__mask">
+                  <span class="name">{{ item.album_name }}</span>
+                  <span class="desc">{{ item.description }}</span>
                 </div>
-                <el-image class="album-box__image animate__animated animate__bounceIn" :src="item" />
+                <el-image class="albumList-box__image animate__animated animate__bounceIn" :src="item.album_cover" />
               </div>
             </el-col>
           </el-row>
@@ -21,66 +55,52 @@
   </div>
 </template>
 
-<script setup>
-import { reactive } from "vue"
-import articleCover from "@/assets/img/astronaut.jpg"
-import articleCover1 from "@/assets/img/computer.jpg"
-import { useRouter } from "vue-router"
-
-const album = reactive([])
-for (let i = 0; i < 6; i++) {
-  i % 2 == 0 ? album.push(articleCover) : album.push(articleCover1)
-}
-
-const router = useRouter()
-const details = () => {
-  router.push("/photos")
-}
-</script>
-
 <style lang="scss" scoped>
-.album {
+.albumList {
   &-card {
     padding: 10px;
   }
   &-box {
-    position: relative;
+    width: 100%;
+    height: 100%;
     &__image {
+      position: relative;
       border-radius: 8px;
       vertical-align: middle;
+      width: 16rem;
+      height: 10rem;
     }
     &__mask {
       display: none;
       .name {
-        display: inline-block;
+        display: block;
         margin: 15px 0 0 15px;
-        color: rgb(36, 34, 34);
-        font-size: 18px;
+        color: #fff;
+        font-size: 1.2rem;
         font-weight: bold;
       }
       .desc {
-        display: inline-block;
+        display: block;
         margin: 15px 0 0 15px;
-        color: rgb(36, 34, 34);
-        font-size: 16px;
+        color: #fff;
+        font-size: 0.8rem;
         font-weight: bold;
       }
     }
   }
 }
-.album-box:hover {
-  transition: all 0.5s ease-in-out;
-  transform: scaleX(0.99);
-  .album-box__mask {
-    animation: showName 0.8s;
+.albumList-box:hover {
+  transition: all 0.2s ease-in-out;
+  transform: scaleX(0.95);
+  .albumList-box__mask {
     display: block;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 53px;
-    opacity: 0.7;
-    background-color: #fff;
+    left: 3px;
+    right: 3px;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     z-index: 999;
   }
 }
@@ -89,13 +109,5 @@ const details = () => {
 }
 .col-space {
   padding: 2px !important;
-}
-@keyframes showName {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0.7;
-  }
 }
 </style>

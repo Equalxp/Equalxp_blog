@@ -1,13 +1,58 @@
+<script setup>
+import { ref, reactive, onMounted } from "vue"
+import { preview } from "vue3-preview-image"
+import { useRoute } from "vue-router"
+import { getPhotosByAlbumId } from "@/api/photo"
+
+const route = useRoute()
+const photoList = ref([])
+const total = ref(0)
+const previewList = ref([])
+
+const param = reactive({
+  current: 1,
+  size: 12,
+  status: 1,
+  id: null
+})
+
+const pageGetPhotos = async () => {
+  let res = await getPhotosByAlbumId(param)
+  if (res.code == 0) {
+    if (param.current == 1) {
+      photoList.value = res.result.list
+      previewList.value = res.result.list.map(l => l.url)
+    } else {
+      photoList.value = photoList.value.concat(res.result.list)
+      res.result.list.forEach(l => {
+        previewList.value.push(l.url)
+      })
+    }
+    total.value = res.result.total
+  }
+}
+
+const show = index => {
+  preview(index, previewList.value)
+}
+onMounted(() => {
+  if (route.query.id) {
+    param.id = Number(route.query.id)
+    pageGetPhotos()
+  }
+})
+</script>
+
 <template>
   <PageHeader />
-  <div class="album">
+  <div class="photoList">
     <el-row class="center_box">
       <el-col :span="24">
-        <el-card class="album-card">
-          <el-row class="row-space">
-            <el-col class="col-space" :xs="24" :sm="12" :md="6" v-for="(item, index) in album" :key="index">
-              <div class="animate__animated animate__fadeIn">
-                <el-image class="image" :src="item" fit="contain" @click="show(index)"></el-image>
+        <el-card class="photoList-card">
+          <el-row v-if="photoList.length" class="row-space">
+            <el-col class="col-space" :xs="12" :sm="4" v-for="(item, index) in photoList" :key="index">
+              <div class="image-box flex_center animate__animated animate__fadeIn">
+                <el-image class="image" :src="item.url" fit="fill" @click="show(index)"></el-image>
               </div>
             </el-col>
           </el-row>
@@ -17,29 +62,20 @@
   </div>
 </template>
 
-<script setup>
-import { reactive } from "vue"
-import articleCover from "@/assets/img/astronaut.jpg"
-import articleCover1 from "@/assets/img/computer.jpg"
-import { preview } from "vue3-preview-image"
-
-const album = reactive([])
-for (let i = 0; i < 6; i++) {
-  i % 2 == 0 ? album.push(articleCover) : album.push(articleCover1)
-}
-const show = index => {
-  preview(index, album)
-}
-</script>
-
 <style lang="scss" scoped>
-.album {
-  .album-card {
+.photoList {
+  .photoList-card {
     padding: 10px;
+  }
+  .image-box {
+    width: 100%;
+    height: 100%;
   }
   .image {
     vertical-align: middle;
     cursor: pointer;
+    width: 10rem;
+    height: 10rem;
   }
 }
 .row-space {
