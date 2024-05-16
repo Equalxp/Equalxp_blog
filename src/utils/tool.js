@@ -1,4 +1,4 @@
-import { config } from '@/config/config'
+import { config } from "@/config/config"
 // 转码
 export const Base64 = {
   encode: function (v) {
@@ -11,7 +11,7 @@ export const Base64 = {
 
 export const _setLocalItem = function (key, value) {
   try {
-    if (key === '' || key === undefined) {
+    if (key === "" || key === undefined) {
       return
     }
     if (key) {
@@ -20,8 +20,8 @@ export const _setLocalItem = function (key, value) {
         localStorage.setItem(config.ENCRYPTION ? Base64.encode(key) : key, value)
         return
       }
-      if (value === null || value === undefined || value === '') {
-        return ''
+      if (value === null || value === undefined || value === "") {
+        return ""
       }
       // 编码
       let enObj = JSON.stringify(value)
@@ -37,13 +37,13 @@ export const _setLocalItem = function (key, value) {
 }
 export const _getLocalItem = function (key) {
   try {
-    if (key === null || key === '' || key === undefined) {
-      return ''
+    if (key === null || key === "" || key === undefined) {
+      return ""
     }
     if (key) {
       let value = localStorage.getItem(config.ENCRYPTION ? Base64.encode(key) : key)
-      if (value === null || value === undefined || value === '') {
-        return ''
+      if (value === null || value === undefined || value === "") {
+        return ""
       } else {
         value = config.ENCRYPTION ? Base64.decode(value) : value
         return JSON.parse(value)
@@ -56,7 +56,7 @@ export const _getLocalItem = function (key) {
 
 export const _setSessionItem = function (key, value) {
   try {
-    if (key === '' || key === undefined) {
+    if (key === "" || key === undefined) {
       return
     }
     if (key) {
@@ -64,8 +64,8 @@ export const _setSessionItem = function (key, value) {
         value = JSON.stringify(value)
         sessionStorage.setItem(config.ENCRYPTION ? Base64.encode(key) : key, value)
       }
-      if (value === null || value === undefined || value === '') {
-        return ''
+      if (value === null || value === undefined || value === "") {
+        return ""
       }
       // 编码
       let enObj = JSON.stringify(value)
@@ -81,13 +81,13 @@ export const _setSessionItem = function (key, value) {
   }
 }
 export const _getSessionItem = function (key) {
-  if (key === null || key === '' || key === undefined) {
+  if (key === null || key === "" || key === undefined) {
     return null
   }
   try {
     if (key) {
       let value = sessionStorage.getItem(config.ENCRYPTION ? Base64.encode(key) : key)
-      if (value === null || value === undefined || value === '') {
+      if (value === null || value === undefined || value === "") {
         return value
       } else {
         value = config.ENCRYPTION ? Base64.decode(value) : value
@@ -102,7 +102,7 @@ export const _getSessionItem = function (key) {
   }
 }
 export const _removeLocalItem = function (key) {
-  if (key === null || key === '' || key === undefined) {
+  if (key === null || key === "" || key === undefined) {
     return
   }
   if (key) {
@@ -112,7 +112,7 @@ export const _removeLocalItem = function (key) {
 }
 // 清空session数据
 export const _removeSessionItem = function (key) {
-  if (key === null || key === '' || key === undefined) {
+  if (key === null || key === "" || key === undefined) {
     return
   }
   if (key) {
@@ -123,8 +123,8 @@ export const _removeSessionItem = function (key) {
 // 格式化日期
 export const _formDate = function (date) {
   if (date) {
-    let arr = date.split('T')
-    return arr && arr.length > 0 ? arr.join(' ') : ''
+    let arr = date.split("T")
+    return arr && arr.length > 0 ? arr.join(" ") : ""
   } else {
     return date
   }
@@ -134,12 +134,12 @@ export const _formDate = function (date) {
  * 递归深拷贝
  */
 export function deepClone(source) {
-  if (!source && typeof source !== 'object') {
-    throw new Error('error arguments', 'deepClone')
+  if (!source && typeof source !== "object") {
+    throw new Error("error arguments", "deepClone")
   }
   const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach((keys) => {
-    if (source[keys] && typeof source[keys] === 'object') {
+  Object.keys(source).forEach(keys => {
+    if (source[keys] && typeof source[keys] === "object") {
       targetObj[keys] = deepClone(source[keys])
     } else {
       targetObj[keys] = source[keys]
@@ -150,7 +150,10 @@ export function deepClone(source) {
 
 export function isMobile() {
   // 手机端
-  let reg =
-    /(phone|pad|iPhone|iPod|ios|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+  let reg = /(phone|pad|iPhone|iPod|ios|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
   return reg.test(navigator.userAgent)
+}
+
+export function randomFontColor() {
+  return `rgb(${Math.random() * 180 + 30},${Math.random() * 180 + 30},${Math.random() * 180 + 30})`
 }

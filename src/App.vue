@@ -7,12 +7,15 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { isMobile } from '@/utils/tool'
+import { addView } from '@/api/config'
 
 const backTopProps = reactive({
   right: '',
   fontSize: '',
 })
-onMounted(() => {
+onMounted(async () => {
+  // 上传访问量
+  await addView()
   // 首次判断是手机还是pc
   backTopProps.right = isMobile() ? '0' : '5%'
   backTopProps.fontSize = isMobile() ? '4rem' : '5.5rem'
