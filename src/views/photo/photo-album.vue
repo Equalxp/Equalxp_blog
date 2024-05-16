@@ -9,6 +9,7 @@ const param = reactive({
 })
 const albumList = ref([])
 const total = ref(0)
+const loading = ref(false)
 
 const router = useRouter()
 const goToPhotos = id => {
@@ -16,10 +17,14 @@ const goToPhotos = id => {
 }
 
 const pageGetAlbumList = async () => {
+  if (param.current == 1) {
+    loading.value = true
+  }
   let res = await getAlbumList(param)
   if (res.code == 0) {
     if (param.current == 1) {
       albumList.value = res.result.list
+      loading.value = false
     } else {
       albumList.value = albumList.value.concat(res.result.list)
     }
@@ -37,7 +42,7 @@ onMounted(() => {
   <div class="albumList">
     <el-row class="center_box">
       <el-col :span="24">
-        <el-card class="albumList-card">
+        <el-card class="albumList-card" v-loading="loading">
           <el-row class="row-space">
             <el-col class="col-space" :xs="12" :sm="6" v-for="item in albumList" :key="item.id">
               <div class="albumList-box flex_center" @click="goToPhotos(item.id)">
@@ -59,6 +64,7 @@ onMounted(() => {
 .albumList {
   &-card {
     padding: 10px;
+    min-height: 12em;
   }
   &-box {
     width: 100%;

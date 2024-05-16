@@ -8,6 +8,7 @@ const route = useRoute()
 const photoList = ref([])
 const total = ref(0)
 const previewList = ref([])
+const loading = ref(false)
 
 const param = reactive({
   current: 1,
@@ -17,11 +18,15 @@ const param = reactive({
 })
 
 const pageGetPhotos = async () => {
+  if (param.current == 1) {
+    loading.value = true
+  }
   let res = await getPhotosByAlbumId(param)
   if (res.code == 0) {
     if (param.current == 1) {
       photoList.value = res.result.list
       previewList.value = res.result.list.map(l => l.url)
+      loading.value = false
     } else {
       photoList.value = photoList.value.concat(res.result.list)
       res.result.list.forEach(l => {
@@ -48,7 +53,7 @@ onMounted(() => {
   <div class="photoList">
     <el-row class="center_box">
       <el-col :span="24">
-        <el-card class="photoList-card">
+        <el-card class="photoList-card" v-loading="loading">
           <el-row v-if="photoList.length" class="row-space">
             <el-col class="col-space" :xs="12" :sm="4" v-for="(item, index) in photoList" :key="index">
               <div class="image-box flex_center animate__animated animate__fadeIn">
@@ -66,6 +71,7 @@ onMounted(() => {
 .photoList {
   .photoList-card {
     padding: 10px;
+    min-height: 12em;
   }
   .image-box {
     width: 100%;
