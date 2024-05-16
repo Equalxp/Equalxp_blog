@@ -6,17 +6,17 @@
   </div>
   <div class="personal-say">{{ configDetail.personal_say }}</div>
   <div class="common-menu flex_r_between">
+    <span class="flex_c_center" @click="operate('goToArchives')">
+      <span class="common-menu__label to_pointer">文章</span>
+      <span class="common-menu__value to_pointer">{{ configDetail.articleCount }}</span>
+    </span>
     <span class="flex_c_center" @click="operate('goToCategory')">
       <span class="common-menu__label to_pointer">分类</span>
-      <span class="common-menu__value to_pointer">15</span>
+      <span class="common-menu__value to_pointer">{{ configDetail.categoryCount }}</span>
     </span>
     <span class="flex_c_center" @click="operate('goToTag')">
       <span class="common-menu__label to_pointer">标签</span>
-      <span class="common-menu__value to_pointer">10</span>
-    </span>
-    <span class="flex_c_center" @click="operate('goToArchives')">
-      <span class="common-menu__label to_pointer">文章</span>
-      <span class="common-menu__value to_pointer">5</span>
+      <span class="common-menu__value to_pointer">{{ configDetail.tagCount }}</span>
     </span>
   </div>
   <div class="git-ee flex_r_around">
@@ -26,10 +26,10 @@
     </span>
   </div>
   <div class="personal-link flex_r_around">
-    <i class="iconfont icon-bilibili-line" @click="operate('openLink', configDetail.bilibili_link)"></i>
-    <i class="iconfont icon-github-fill" @click="operate('openLink', configDetail.github_link)"></i>
-    <i class="iconfont icon-weixin1" @click="operate('openLink', configDetail.we_chat_link)"></i>
-    <i class="iconfont icon-QQ1" @click="operate('openLink', configDetail.qq_link)"></i>
+    <i class="iconfont icon-bilibili-line to_pointer" @click="operate('openLink', configDetail.bilibili_link)"></i>
+    <i class="iconfont icon-github-fill to_pointer" @click="operate('openLink', configDetail.github_link)"></i>
+    <i class="iconfont icon-weixin1 to_pointer" @click="operate('openLink', configDetail.we_chat_link)"></i>
+    <i class="iconfont icon-QQ1 to_pointer" @click="operate('openLink', configDetail.qq_link)"></i>
   </div>
 </template>
 
@@ -63,7 +63,7 @@ const operate = (op, val) => {
       router.push('/archives')
       break
     case 'openLink':
-      console.log(val);
+      window.open(val)
       break
   }
 }

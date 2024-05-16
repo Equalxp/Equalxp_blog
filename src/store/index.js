@@ -1,35 +1,24 @@
-import { defineStore } from 'pinia' //引入pinia
-import { _getLocalItem, _setLocalItem } from '@/utils/tool'
-import { useDark, useToggle } from '@vueuse/core'
-
+import { defineStore } from "pinia" //引入pinia
+import { _getLocalItem, _setLocalItem } from "@/utils/tool"
+import { useDark, useToggle } from "@vueuse/core"
 
 const isDark = useDark({
   // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
-  storageKey: 'useDarkKEY',
+  storageKey: "useDarkKEY",
   // 暗黑class名字
-  valueDark: 'dark',
+  valueDark: "dark",
   // 高亮class名字
-  valueLight: 'light',
+  valueLight: "light",
 })
 const toggle = useToggle(isDark)
 
-
-export const staticData = defineStore('staticData', {
+export const staticData = defineStore("staticData", {
   state: () => {
     return {
-      previewThemeList: ['default', 'github', 'vuepress', 'mk-cute', 'smart-blue', 'cyanosis'],
-      codeThemeList: [
-        'atom',
-        'a11y',
-        'github',
-        'gradient',
-        'kimbie',
-        'paraiso',
-        'qtcreator',
-        'stackoverflow',
-      ],
-      previewTheme: 'default',
-      codeTheme: 'atom',
+      previewThemeList: ["default", "github", "vuepress", "mk-cute", "smart-blue", "cyanosis"],
+      codeThemeList: ["atom", "a11y", "github", "gradient", "kimbie", "paraiso", "qtcreator", "stackoverflow"],
+      previewTheme: "mk-cute",
+      codeTheme: "atom",
       theme: isDark.value,
     }
   },
@@ -42,15 +31,15 @@ export const staticData = defineStore('staticData', {
     switchMainTheme() {
       toggle()
       this.theme = isDark.value
-      _setLocalItem('mainTheme', this.theme ? 'dark' : 'light')
+      _setLocalItem("mainTheme", this.theme ? "dark" : "light")
     },
   },
 })
 
-export const user = defineStore('user', {
+export const user = defineStore("user", {
   state: () => {
     return {
-      userInfo: '小张',
+      userInfo: "小张",
     }
   },
 })

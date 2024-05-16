@@ -15,7 +15,9 @@
   <div style="padding: 0 1.5rem">
     <SkeletonItem variant="text" height="2rem" />
   </div>
-  <div class="flex_r_around" style="padding: 1rem 5rem">
+  <div class="flex_r_around" style="padding: 1rem 3rem">
+    <SkeletonItem variant="circle" width="2rem" height="2rem" />
+    <SkeletonItem variant="circle" width="2rem" height="2rem" />
     <SkeletonItem variant="circle" width="2rem" height="2rem" />
     <SkeletonItem variant="circle" width="2rem" height="2rem" />
   </div>

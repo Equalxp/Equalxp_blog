@@ -1,20 +1,18 @@
-
-@import './variable.scss'; //引入全局样式
-@import './element/element.scss'; //引入全局样式
-@import './element/dark.scss'; //引入全局样式
+@import "./variable.scss"; //引入全局样式
+@import "./element/element.scss"; //引入全局样式
+@import "./element/dark.scss"; //引入全局样式
 
 html,
 body {
   height: 100%;
+  width: 100% !important;
   margin: 0 !important;
   padding: 0;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-size: var(--global-font-size);
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
-    Microsoft YaHei, Arial, sans-serif;
-  
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
 #app {
@@ -50,18 +48,18 @@ div:focus {
     visibility: hidden;
     display: block;
     font-size: 0;
-    content: ' ';
+    content: " ";
     clear: both;
     height: 0;
   }
 }
 
-.layout{
+.layout {
   background: linear-gradient(90deg, #ffffff 1%, #ead2ea 10.2%, #e4d5ee 19.6%, #d1def3 36.8%, #b5dee5 62.2%, #cfebf3 88.9%, #ffffff 99%) !important;
 }
 .gradient {
-  opacity: 1;
-  background: linear-gradient(120deg, #d2daff 80%, #b3b7ff 95%) !important;
+  background: rgb(255, 255, 255, 0.7);
+  background: linear-gradient(120deg, #f8feff, #dffbff, #faedff, #e0eeff, #f5f5d2, #fffff9);
 }
 
 .header_box {
@@ -74,21 +72,21 @@ div:focus {
   background-color: #fff;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 3px 2px 4px #f3daf3;
-  opacity: 0.8;
+  box-shadow: 0px -1px 3px var(--primary);
+  background: rgb(255, 255, 255, 0.7);
 }
-.main_box{
+.main_box {
   box-sizing: border-box;
 }
 .blog_info {
   padding: 0 7.5px !important;
 }
-.footer_box{
+.footer_box {
   width: 100%;
   z-index: 9999;
   height: 10rem;
   overflow: hidden;
-  background: rgba(255,255,255,.3);
+  background: rgba(255, 255, 255, 0.3);
   backdrop-filter: saturate(100%) blur(3px);
   overflow-x: hidden;
   box-sizing: border-box;
@@ -125,35 +123,38 @@ div:focus {
   flex-direction: column;
   justify-content: space-around;
 }
-.flex_1{
+.flex_1 {
   flex: 1;
 }
-.flex_c_start{
+.flex_c_start {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-.flex_r_start{
+.flex_r_start {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.flex_wrap{
+.flex_wrap {
   flex-wrap: wrap;
 }
 
-.inline_block{
+.inline_block {
   display: inline-block;
 }
-.to_pointer{
-  transition: 0.2s ease-in-out;
-      &:hover {
-        color: #eb97eb;
-        cursor: pointer;
-      }
+.to_pointer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    color: var(--primary);
+    cursor: pointer;
+    &::before {
+      color: var(--primary);
+    }
+  }
 }
-.text_overflow{
+.text_overflow {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -161,17 +162,15 @@ div:focus {
 
 .scale {
   cursor: pointer;
-  transition: 0.6s ease-in-out;
-    &:hover {
-      transform: scale(1.03);
-    }
+  transition: 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
-.pad_5{
+.pad_5 {
   padding: 5px;
 }
-
-
 
 // 手机
 @media screen and (max-width: 768px) {
@@ -181,27 +180,24 @@ div:focus {
     margin: 0 auto;
     min-height: calc(100vh - 128px);
   }
-  .center_box{
+  .center_box {
+    padding: 1.6rem 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: calc(100vh - 35rem);
+  }
+  .article_box {
     padding: 1.6rem 10px;
     max-width: 1000px;
     margin: 0 auto;
     min-height: calc(100vh - 28rem);
   }
-  .article_box{
-    padding: 1.6rem 10px;
-    max-width: 1000px;
-    margin: 0 auto;
-    min-height: calc(100vh - 28rem);
-  }
-  .mobile_menu{
-    opacity: .8;
+  .mobile_menu {
     height: 100%;
     padding: 0 10px;
   }
-  .pc_menu{
-    opacity: 0;
-    position: absolute;
-    left: 999px;
+  .pc_menu {
+    display: none;
   }
   .el-dialog {
     width: 100% !important;
@@ -210,16 +206,20 @@ div:focus {
     margin-bottom: 0 !important;
     overflow: auto !important;
   }
-  .mobile-affix{
+  .mobile-affix {
     display: block;
     position: fixed;
-    bottom: 40%;
+    bottom: 30%;
     left: 0%;
+    .icon-arrowright{
+      font-size: 1.8rem;
+    }
+    
   }
-  .recommend{
+  .recommend {
     height: 10rem;
   }
-  .avatar-show{
+  .avatar-show {
     display: block;
   }
 }
@@ -232,13 +232,13 @@ div:focus {
     margin: 0 auto;
     min-height: calc(100vh - 128px);
   }
-  .center_box{
+  .center_box {
     padding: 2.8rem 10px;
     max-width: 1000px;
     margin: 0 auto;
-    min-height: calc(100vh - 28rem);
+    min-height: calc(100vh - 35rem);
   }
-  .article_box{
+  .article_box {
     padding: 2.8rem 10px;
     max-width: 1200px;
     margin: 0 auto;
@@ -247,13 +247,10 @@ div:focus {
   .right-side-space {
     padding: 7.5px 1.875px !important;
   }
-  .mobile_menu{
-    position: absolute;
-    left: 9999px;
-    opacity: 0;
+  .mobile_menu {
+    display: none;
   }
-  .pc_menu{
-    opacity: .8;
+  .pc_menu {
     padding: 0 20px;
   }
   .el-dialog {
@@ -265,10 +262,10 @@ div:focus {
   .mobile-affix {
     display: none;
   }
-  .recommend{
+  .recommend {
     height: 12rem;
   }
-  .avatar-show{
+  .avatar-show {
     display: none;
   }
 }
@@ -292,11 +289,11 @@ div:focus {
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
   background-color: #efbcda;
-  background-image: -webkit-linear-gradient( 45deg, rgb(171, 245, 218) 25%, transparent 25%, transparent 50%, rgb(150, 212, 236) 50%, rgb(239, 147, 228) 75%, transparent 75%, transparent);
+  background-image: -webkit-linear-gradient(45deg, rgb(171, 245, 218) 25%, transparent 25%, transparent 50%, rgb(150, 212, 236) 50%, rgb(239, 147, 228) 75%, transparent 75%, transparent);
   border-radius: 2em;
 }
 ::scrollbar-thumb {
   background-color: #efbcda;
-  background-image: -webkit-linear-gradient( 45deg, rgb(171, 245, 218) 25%, transparent 25%, transparent 50%, rgb(150, 212, 236) 50%, rgb(239, 147, 228) 75%, transparent 75%, transparent);
+  background-image: -webkit-linear-gradient(45deg, rgb(171, 245, 218) 25%, transparent 25%, transparent 50%, rgb(150, 212, 236) 50%, rgb(239, 147, 228) 75%, transparent 75%, transparent);
   border-radius: 2em;
 }

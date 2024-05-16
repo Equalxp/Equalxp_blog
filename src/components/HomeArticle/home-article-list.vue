@@ -1,65 +1,76 @@
 <template>
   <el-row>
-    <el-col v-for="(item, index) in articleList" :key="item">
-      <el-card>
-        <div class="article-box">
-          <el-skeleton :loading="param.loading" style="height: 100%" animated>
-            <template #template>
-              <ArticleSkeleton />
-            </template>
-            <template #default>
-              <div class="article-cover scale" @click="operate('detail', item)">
+    <template v-if="param.loading">
+      <el-col v-for="item in 10">
+        <el-card>
+          <div class="article-box">
+            <el-skeleton :loading="param.loading" style="height: 100%" animated>
+              <template #template>
+                <ArticleSkeleton />
+              </template>
+            </el-skeleton>
+          </div>
+        </el-card>
+      </el-col>
+    </template>
+    <template v-else>
+      <el-col v-for="(item, index) in articleList" :key="item">
+        <el-card>
+          <div class="article-box">
+            <div class="article-cover" @click="operate('detail', item)">
+              <div class="scale" style="width: 100%; height: 100%">
                 <el-image :src="item.article_cover" fit="cover" class="image animate__animated animate__fadeInDown">
                   <template #error>
                     <svg-icon name="image" :width="20" :height="20"></svg-icon>
                   </template>
                 </el-image>
               </div>
-              <!-- 信息 -->
-              <div class="article-info flex_c_between">
-                <div class="title" @click="operate('detail', item)">
-                  {{ item.article_title }}
-                </div>
-                <div class="meta">
-                  <span class="to_pointer">
-                    <i class="iconfont icon-calendar2"></i>
-                    <span class="meta-label">发表于</span>
-                    <span class="meta-value">{{ item.createdAt }}</span>
-                  </span>
-                  <span class="to_pointer">
-                    <i class="iconfont icon-schedule"></i>
-                    <span class="meta-label">更新于</span>
-                    <span class="meta-value">{{ item.updatedAt }}</span>
-                    <span class="article-meta__separator">|</span>
-                  </span>
-                  <span class="to_pointer" @click="operate('category', item)">
-                    <i class="iconfont icon-folder"></i>
-                    <span class="meta-value">{{ item.categoryName }}</span>
-                    <span class="article-meta__separator">|</span>
-                  </span>
-                  <span class="to_pointer" @click="operate('tag', item)">
-                    <i class="iconfont icon-label_fill"></i>
-                    <span class="meta-value" v-for="(tagName, index) in item.tagNameList" :key="index"> {{ index == item.tagNameList.length - 1 ? tagName : tagName + "、" }} </span>
-                    <span class="article-meta__separator">|</span>
-                  </span>
-                  <span class="to_pointer">
-                    <i class="iconfont icon-speechbubble"></i>
-                    <span class="meta-value">10</span>
-                    <span class="article-meta__separator">|</span>
-                  </span>
-                  <span class="to_pointer">
-                    <i class="iconfont icon-chakan"></i>
-                    <span class="meta-value">13</span>
-                  </span>
-                </div>
-                <div class="desc flex_c_between">描述点什么</div>
+            </div>
+            <!-- 信息 -->
+            <div class="article-info flex_c_between animate__animated animate__fadeIn">
+              <div class="title" @click="operate('detail', item)">
+                {{ item.article_title }}
               </div>
-            </template>
-          </el-skeleton>
-        </div>
-        <!-- 图片 -->
-      </el-card>
-    </el-col>
+              <div class="meta">
+                <span class="to_pointer">
+                  <i class="iconfont icon-calendar2"></i>
+                  <span class="meta-label">发表于</span>
+                  <span class="meta-value">{{ item.createdAt }}</span>
+                </span>
+                <span class="to_pointer">
+                  <i class="iconfont icon-schedule"></i>
+                  <span class="meta-label">更新于</span>
+                  <span class="meta-value">{{ item.updatedAt }}</span>
+                </span>
+                <span class="article-meta__separator"></span>
+                <span class="to_pointer" @click="operate('category', item)">
+                  <i class="iconfont icon-folder"></i>
+                  <span class="meta-value">{{ item.categoryName }}</span>
+                </span>
+                <span class="article-meta__separator"></span>
+                <span class="to_pointer" @click="operate('tag', item)">
+                  <i class="iconfont icon-label_fill"></i>
+                  <span class="meta-value" v-for="(tagName, index) in item.tagNameList" :key="index"> {{ index == item.tagNameList.length - 1 ? tagName : tagName + "、" }} </span>
+                </span>
+                <span class="article-meta__separator"></span>
+                <span class="to_pointer">
+                  <i class="iconfont icon-icon1"></i>
+                  <span class="meta-value">{{ item.thumbs_up_times }}</span>
+                </span>
+                <span class="article-meta__separator"></span>
+                <span class="to_pointer">
+                  <i class="iconfont icon-chakan"></i>
+                  <span class="meta-value">{{ item.view_times }}</span>
+                </span>
+              </div>
+              <div class="desc flex_c_between">{{ item.article_description }}</div>
+            </div>
+          </div>
+          <!-- 图片 -->
+        </el-card>
+      </el-col>
+    </template>
+
     <pagi-nation :size="param.size" :current="param.current" :layout="layout" :total="articleTotal" @pagination="pagination" />
   </el-row>
 </template>
@@ -74,7 +85,7 @@ const router = useRouter()
 const param = reactive({
   current: 1, // 当前页
   size: 10, // 每页条目数
-  loading: true // 加载
+  loading: true, // 加载
 })
 let articleList = reactive([])
 
@@ -156,12 +167,29 @@ onMounted(async () => {
       padding-right: 0.2rem;
     }
 
-    .icon-speechbubble {
-      font-size: 14px;
+    .icon-label_fill {
+      font-size: 1.2rem;
+    }
+
+    .icon-icon1 {
+      font-size: 1.2rem;
+    }
+
+    .icon-chakan {
+      font-size: 1.2rem;
     }
 
     .article-meta__separator {
-      margin: 0 0.3rem;
+      margin: 0 0.4rem;
+      font-size: 1.1rem;
+      position: relative;
+
+      &::after {
+        content: "|";
+        position: absolute;
+        top: -3px;
+        right: 0;
+      }
     }
 
     i {

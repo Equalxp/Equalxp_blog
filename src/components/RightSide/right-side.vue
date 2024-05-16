@@ -1,8 +1,63 @@
+<script setup>
+import { ref, onMounted, reactive } from "vue"
+import { homeGetConfig } from "@/api/config"
+import { getAllTag } from "@/api/tag"
+import { homeGetStatistic } from "@/api/home"
+import { randomFontColor } from "@/utils/tool"
+const loading = ref(true)
+const runtime = ref(0)
+let configDetail = reactive({})
+let tags = ref([])
+
+// 获取网站详细信息
+const getConfigDetail = async () => {
+  let res = await homeGetConfig()
+  if (res.code == 0) {
+    configDetail = res.result
+    calcRuntimeDays(configDetail.createdAt)
+  }
+}
+// 获取文章数、分类数、标签数
+const getStatistic = async () => {
+  let res = await homeGetStatistic()
+  if (res.code == 0) {
+    Object.assign(configDetail, res.result)
+  }
+}
+
+// 获取所有的标签
+const getAllTags = async () => {
+  let res = await getAllTag()
+  if (res.code == 0) {
+    tags.value = res.result.map(r => {
+      r.color = randomFontColor()
+      return r
+    })
+  }
+}
+// 计算出网站运行天数
+const calcRuntimeDays = time => {
+  if (time) {
+    const now = new Date().getTime()
+    const created = new Date(time).getTime()
+    const days = Math.floor((now - created) / 3.6e6)
+    runtime.value = days
+  }
+}
+onMounted(async () => {
+  loading.value = true
+  await getConfigDetail()
+  await getStatistic()
+  await getAllTags()
+  loading.value = false
+})
+</script>
+
 <template>
   <div class="right-side">
     <el-row>
       <el-col :span="24" class="right-side-space">
-        <el-card class="info-card" shadow="hover">
+        <el-card class="info-card animate__animated animate__fadeIn" shadow="hover">
           <el-skeleton :loading="loading" animated>
             <template #template>
               <RightSideTopSkeleton />
@@ -14,7 +69,7 @@
         </el-card>
       </el-col>
       <el-col :xs="0" :sm="24" class="right-side-space">
-        <el-card class="right-card flex_c_center" shadow="hover">
+        <el-card class="right-card flex_c_center animate__animated animate__fadeIn" shadow="hover">
           <el-skeleton :loading="loading" animated>
             <template #template>
               <RightSideSkeletonItem />
@@ -42,7 +97,7 @@
         </el-card>
       </el-col> -->
       <el-col :xs="0" :sm="24" class="right-side-space">
-        <el-card class="right-card flex_c_center" shadow="hover">
+        <el-card class="right-card flex_c_center animate__animated animate__fadeIn" shadow="hover">
           <el-skeleton :loading="loading" animated>
             <template #template>
               <RightSideSkeletonItem />
@@ -70,7 +125,7 @@
                 <span class="value">{{ runtime }} 天</span>
               </div>
               <div class="flex_r_between">
-                <span>访问人数：</span>
+                <span>博客访问次数：</span>
                 <span class="value">{{ configDetail.view_time }}</span>
               </div>
             </div>
@@ -80,53 +135,6 @@
     </el-row>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, reactive } from "vue"
-import { homeGetConfig } from "@/api/config"
-import { getAllTag } from "@/api/tag"
-import { randomFontColor } from "@/utils/tool"
-const loading = ref(true)
-const runtime = ref(0)
-let configDetail = reactive({})
-let tags = ref([])
-
-// 获取网站详细信息
-const getConfigDetail = async () => {
-  let res = await homeGetConfig()
-  loading.value = true
-  if (res.code == 0) {
-    configDetail = res.result
-    calcRuntimeDays(configDetail.createdAt)
-    loading.value = false
-  }
-}
-// 获取文章数、分类数、标签数
-
-// 获取所有的标签
-const getAllTags = async () => {
-  let res = await getAllTag()
-  if (res.code == 0) {
-    tags.value = res.result.map(r => {
-      r.color = randomFontColor()
-      return r
-    })
-  }
-}
-// 计算出网站运行天数
-const calcRuntimeDays = time => {
-  if (time) {
-    const now = new Date().getTime()
-    const created = new Date(time).getTime()
-    const days = Math.floor((now - created) / 3.6e6)
-    runtime.value = days
-  }
-}
-onMounted(async () => {
-  await getConfigDetail()
-  await getAllTags()
-})
-</script>
 
 <style lang="scss" scoped>
 .right-side {

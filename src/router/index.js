@@ -1,73 +1,81 @@
 //导入 进度条
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import NProgress from "nprogress"
+import "nprogress/nprogress.css"
+import { createRouter, createWebHashHistory } from "vue-router"
+import Home from "../views/Home.vue"
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     meta: {
-      name: '首页',
+      name: "首页",
     },
     component: Home,
   },
   {
-    path: '/category',
-    name: 'category',
+    path: "/archives",
+    name: "archives",
     meta: {
-      name: '分类',
+      name: "时间轴",
     },
-    component: () => import('@/views/category/category.vue'),
+    component: () => import("@/views/archives/archives.vue"),
   },
   {
-    path: '/tag',
-    name: 'tag',
+    path: "/category",
+    name: "category",
     meta: {
-      name: '标签',
+      name: "分类",
     },
-    component: () => import('@/views/tag/tag.vue'),
+    component: () => import("@/views/category/category.vue"),
   },
   {
-    path: '/article',
-    name: 'article',
+    path: "/tag",
+    name: "tag",
     meta: {
-      name: '文章',
+      name: "标签",
     },
-    component: () => import('@/views/article/article.vue'),
+    component: () => import("@/views/tag/tag.vue"),
   },
   {
-    path: '/articleList',
-    name: 'articleList',
+    path: "/article",
+    name: "article",
     meta: {
-      name: '文章列表',
+      name: "文章",
     },
-    component: () => import('@/views/article/article-list.vue'),
+    component: () => import("@/views/article/article.vue"),
   },
   {
-    path: '/photoAlbum',
-    name: 'photoAlbum',
+    path: "/articleList",
+    name: "articleList",
     meta: {
-      name: '相册',
+      name: "文章列表",
     },
-    component: () => import('@/views/photo/photo-album.vue'),
+    component: () => import("@/views/article/article-list.vue"),
   },
   {
-    path: '/photos',
-    name: 'photos',
+    path: "/photoAlbum",
+    name: "photoAlbum",
     meta: {
-      name: '图库',
+      name: "相册",
     },
-    component: () => import('@/views/photo/photos.vue'),
+    component: () => import("@/views/photo/photo-album.vue"),
   },
   {
-    path: '/menu',
-    name: 'menu',
-    children: [
-    
-    ],
+    path: "/photos",
+    name: "photos",
+    meta: {
+      name: "图库",
+    },
+    component: () => import("@/views/photo/photos.vue"),
   },
+  // {
+  //   path: '/menu',
+  //   name: 'menu',
+  //   children: [
+
+  //   ],
+  // },
 ]
 
 const router = createRouter({

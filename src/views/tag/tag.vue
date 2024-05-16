@@ -1,45 +1,12 @@
-<template>
-  <div class="tag">
-    <el-row class="center_box">
-      <el-col :span="24">
-        <el-card class="tag-card">
-          <div class="tag-total flex_center">标签 - {{ total }}</div>
-          <el-row>
-            <el-col :span="24" class="tag-item">
-              <span
-                v-for="(item, i) in tagList"
-                :style="{ fontSize: item.fontSize + 'rem', color: item.fontColor }"
-                class="tag-item__label scale"
-                @click="goToArticleList(item.tagId)"
-              >
-                {{ item.label }}
-              </span>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
-</template>
-
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import { getAllTag } from "@/api/tag"
 
-onMounted(() => {
-  for (let i = 0; i < total.value; i++) {
-    tagList.push({
-      tagId: i,
-      label: '标签' + i,
-      value: i,
-      fontColor: randomFontColor(),
-      fontSize: randomFontSize(),
-    })
-  }
-})
 const router = useRouter()
-const tagList = reactive([])
+const tagList = ref([])
 const total = ref(16)
+const loading = ref(false)
 
 const randomFontSize = () => {
   return Math.random() * 1.4 + 0.6
@@ -49,26 +16,70 @@ const randomFontColor = () => {
   return `rgb(${Math.random() * 180 + 30},${Math.random() * 180 + 30},${Math.random() * 180 + 30})`
 }
 
-const goToArticleList = (id) => {
-  router.push({ path: 'articleList', query: { id: id, type: '标签' } })
+const goToArticleList = item => {
+  router.push({ path: "articleList", query: { id: item.id, type: "tag", name: item.tag_name } })
 }
+
+const getTagList = async () => {
+  loading.value = true
+  let res = await getAllTag()
+  if (res.code == 0) {
+    total.value = res.result.length
+    tagList.value = res.result.map(tag => {
+      return {
+        id: tag.id,
+        tag_name: tag.tag_name,
+        fontSize: randomFontSize(),
+        fontColor: randomFontColor(),
+      }
+    })
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  getTagList()
+})
 </script>
+
+<template>
+  <div class="tag">
+    <el-row class="center_box">
+      <el-col :span="24">
+        <el-card class="tag-card">
+          <div class="tag-total flex_center">标签 - {{ total }}</div>
+          <el-skeleton v-if="loading" :loading="loading" :rows="1" animated />
+          <el-row v-else>
+            <el-col :span="24" class="tag-item">
+              <span v-for="(item, i) in tagList" :style="{ fontSize: item.fontSize + 'rem', color: item.fontColor }" class="tag-item__label scale animate__animated animate__fadeInDown" @click="goToArticleList(item)">
+                {{ item.tag_name }}
+              </span>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .tag {
   &-card {
     padding: 40px 50px;
   }
+
   &-total {
     font-size: 2.2rem;
     line-height: 2;
     font-weight: 600;
     color: var(--font-color);
   }
+
   &-item {
     padding: 10px;
     box-sizing: border-box;
     text-align: center;
+
     &__label {
       display: inline-block;
       font-weight: bold;
