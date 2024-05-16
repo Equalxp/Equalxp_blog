@@ -1,18 +1,18 @@
 import http from "@/config/request"
 
-/** 分页获取相册 */
-export const getAlbumList = param => {
+/** 获取所有相册 */
+export const getAllAlbum = () => {
   return new Promise((resolve, reject) => {
-    http.post("/api/photoAlbum", param).then(res => {
+    http.get("/api/photoAlbum/getAllAlbumList", {}).then(res => {
       resolve(res)
     })
   })
 }
 
-/** 获取相册内的图片 */
-export const getPhotosByAlbumId = param => {
+/** 根据id获取对应相册内所有图片 */
+export const getAllPhotosByAlbumId = id => {
   return new Promise((resolve, reject) => {
-    http.post("/api/photo/getPhotoListByAlbumId", param).then(res => {
+    http.get(`/api/photo/getAllPhotosByAlbumId/${id}`, {}).then(res => {
       resolve(res)
     })
   })

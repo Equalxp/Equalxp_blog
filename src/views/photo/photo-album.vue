@@ -1,39 +1,69 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue"
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue"
 import { useRouter } from "vue-router"
-import { getAlbumList } from "@/api/photo"
+import { getAllAlbum } from "@/api/photo"
 
-const param = reactive({
-  current: 1,
-  size: 8
-})
 const albumList = ref([])
-const total = ref(0)
 const loading = ref(false)
+let observe = null
 
 const router = useRouter()
 const goToPhotos = id => {
   router.push({ path: "/photos", query: { id } })
 }
 
-const pageGetAlbumList = async () => {
-  if (param.current == 1) {
-    loading.value = true
-  }
-  let res = await getAlbumList(param)
+const getAll = async () => {
+  let res = await getAllAlbum()
   if (res.code == 0) {
-    if (param.current == 1) {
-      albumList.value = res.result.list
-      loading.value = false
-    } else {
-      albumList.value = albumList.value.concat(res.result.list)
-    }
-    total.value = res.result.total
+    albumList.value = res.result
+    loading.value = false
+    nextTick(() => {
+      // 监听盒子
+      observeAlbumBox()
+    })
   }
 }
 
+// 懒加载监听
+const observeAlbumBox = () => {
+  // 获取要监听的元素
+  const boxList = document.querySelectorAll(".albumList-box")
+  observe = new IntersectionObserver(
+    entries => {
+      entries.forEach(async e => {
+        // 元素出现在视口的比例
+        if (e.intersectionRatio > 0) {
+          const nameElement = e.target.childNodes[0].childNodes[0]
+          const descElement = e.target.childNodes[0].childNodes[1]
+          const imgElement = e.target.childNodes[1]
+          // 获取数据
+          const name = nameElement.getAttribute("title")
+          const desc = descElement.getAttribute("title")
+          const src = imgElement.getAttribute("data-src")
+          // 绑定数据
+          nameElement.innerHTML = name
+          descElement.innerHTML = desc
+          imgElement.setAttribute("src", src)
+          //3.停止监听当前图片对象
+          observe.unobserve(e.target) //停止监听
+        }
+      })
+    },
+    // 指定元素与视口相交的比例
+    { threshold: [0.1] }
+  )
+  boxList.forEach(box => {
+    observe.observe(box)
+  })
+}
+
 onMounted(() => {
-  pageGetAlbumList()
+  // 监听页面滚动
+  getAll()
+})
+
+onBeforeUnmount(() => {
+  observe.disconnect()
 })
 </script>
 
@@ -47,10 +77,10 @@ onMounted(() => {
             <el-col class="col-space" :xs="12" :sm="6" v-for="item in albumList" :key="item.id">
               <div class="albumList-box flex_center" @click="goToPhotos(item.id)">
                 <div class="albumList-box__mask">
-                  <span class="name">{{ item.album_name }}</span>
-                  <span class="desc">{{ item.description }}</span>
+                  <span class="name text_overflow" :title="item.album_name"></span>
+                  <span class="desc text_overflow" :title="item.description"></span>
                 </div>
-                <el-image class="albumList-box__image animate__animated animate__bounceIn" :src="item.album_cover" />
+                <img class="albumList-box__image animate__animated animate__bounceIn" :data-src="item.album_cover" />
               </div>
             </el-col>
           </el-row>
@@ -67,29 +97,38 @@ onMounted(() => {
     min-height: 12em;
   }
   &-box {
-    width: 100%;
-    height: 100%;
+    position: relative;
+    width: 16rem;
+    height: 10rem;
     &__image {
-      position: relative;
       border-radius: 8px;
       vertical-align: middle;
-      width: 16rem;
-      height: 10rem;
+      width: 100%;
+      height: 100%;
     }
     &__mask {
-      display: none;
+      display: block;
+      position: absolute;
+      top: 0.8rem;
+      left: 1rem;
+      right: 1rem;
+      bottom: 40%;
+      border-radius: 8px;
+      padding: 5px;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.2);
       .name {
         display: block;
-        margin: 15px 0 0 15px;
+        width: 100%;
         color: #fff;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: bold;
       }
       .desc {
         display: block;
-        margin: 15px 0 0 15px;
+        width: 100%;
         color: #fff;
-        font-size: 0.8rem;
+        font-size: 1rem;
         font-weight: bold;
       }
     }
@@ -98,22 +137,18 @@ onMounted(() => {
 .albumList-box:hover {
   transition: all 0.2s ease-in-out;
   transform: scaleX(0.95);
-  .albumList-box__mask {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 3px;
-    right: 3px;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    z-index: 999;
-  }
 }
 .row-space {
   padding: 0 !important;
 }
 .col-space {
   padding: 2px !important;
+}
+
+@media screen and (max-width: 768px) {
+  .albumList-box {
+    width: 12rem;
+    height: 8rem;
+  }
 }
 </style>
