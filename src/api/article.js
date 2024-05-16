@@ -53,3 +53,21 @@ export const getArticleById = id => {
     })
   })
 }
+
+/** 获取热门文章*/
+export const getHotArticle = () => {
+  return new Promise((resolve, reject) => {
+    http.get("/api/article/getHotArticle", {}).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+/** 根据文章内容搜索文章*/
+export const getArticleByContent = content => {
+  return new Promise((resolve, reject) => {
+    http.get("/api/article/getArticleListByContent/" + content, {}).then(res => {
+      resolve(res)
+    })
+  })
+}

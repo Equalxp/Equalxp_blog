@@ -2,17 +2,36 @@
 import { ref } from "vue"
 import { Search } from "@element-plus/icons-vue"
 
+import { getHotArticle, getArticleByContent } from "@/api/article"
+import { _setLocalItem, _getLocalItem, _removeLocalItem } from "@/utils/tool"
+import { useRouter } from "vue-router"
+
 const isClick = ref(false)
 const searchShow = ref(false)
 const input = ref("") // 搜索内容
-const result = ref([]) // 搜索结果
-const hotSearchList = ref(["hhhh", "shabi", "fsf", "wqwdwq"])
-const historySearchList = ref(["nidaye"])
+const searchResult = ref([]) // 搜索结果
+const hotSearchList = ref([])
+const historySearchList = ref([])
+const numberList = ["&#9312;", "&#9313;", "&#9314;", "&#9315;", "&#9316;"]
 
-const clickSearchIcon = () => {
+const clickSearchIcon = async () => {
   // 打开搜索框
   isClick.value = true
   searchShow.value = true
+
+  historySearchList.value = _getLocalItem("blogSearchHistory") || []
+
+  // 获取热门文章
+  let res = await getHotArticle()
+  if (res.code == 0) {
+    hotSearchList.value = res.result.map((r, index) => {
+      return {
+        id: r.id,
+        article_title: r.article_title,
+        icon: numberList[index]
+      }
+    })
+  }
 }
 
 const handleClose = () => {
@@ -20,7 +39,7 @@ const handleClose = () => {
   searchShow.value = false
   isClick.value = false
   input.value = ""
-  result.value = []
+  searchResult.value = []
 }
 
 const searchInfo = () => {
@@ -28,19 +47,48 @@ const searchInfo = () => {
   if (input.value != "") {
     getArticleList()
   } else {
-    result.value = []
+    searchResult.value = []
+    historySearchList.value = _getLocalItem("blogSearchHistory") || []
   }
 }
 
+const clickHistoryTag = val => {
+  input.value = val
+  searchInfo()
+}
+
 // 根据文章内容来搜索文章
-const getArticleList = () => {
-  result.value = [
-    {
-      id: 1,
-      article_title: "hhh",
-      article_content: "我我我我",
-    },
-  ]
+const getArticleList = async () => {
+  let res = await getArticleByContent(input.value)
+  if (res.code == 0) {
+    searchResult.value =
+      res.result.length &&
+      res.result.map(r => {
+        return {
+          id: r.id,
+          article_title: r.article_title,
+          highlight_content: input.value,
+          rest_content: r.article_content.substring(input.value.length)
+        }
+      })
+    if (historySearchList.value.length > 10) {
+      historySearchList.shift()
+    }
+    if (historySearchList.value.findIndex(h => h == input.value) == -1) {
+      historySearchList.value.push(input.value)
+    }
+    _setLocalItem("blogSearchHistory", historySearchList.value)
+  }
+}
+
+const clearHistorySearch = () => {
+  _removeLocalItem("blogSearchHistory")
+  historySearchList.value = []
+}
+
+const goToArticle = id => {
+  handleClose()
+  router.push({ path: "/article", query: { id } })
 }
 </script>
 
